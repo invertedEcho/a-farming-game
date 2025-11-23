@@ -12,8 +12,12 @@ config_version=5
 
 config/name="a-game"
 run/main_scene="uid://6ye6v48133nk"
-config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/GameManager.cs"
 
 [dotnet]
 

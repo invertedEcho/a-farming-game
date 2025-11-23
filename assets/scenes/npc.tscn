@@ -2,5 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c5hf61xeywdco" path="res://scripts/World/Npc.cs" id="1_qx2m1"]
 
-[node name="MeshInstance3D" type="MeshInstance3D"]
+[node name="NPC" type="MeshInstance3D" node_paths=PackedStringArray("label")]
 script = ExtResource("1_qx2m1")
+label = NodePath("")

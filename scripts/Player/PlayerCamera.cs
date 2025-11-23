@@ -12,7 +12,7 @@ public partial class PlayerCamera : Camera3D
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventMouseMotion m)
+        if (@event is InputEventMouseMotion m && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
             // yaw
             RotateY(-m.Relative.X * Sens);
