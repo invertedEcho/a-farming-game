@@ -26,10 +26,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.127205, 0)
 shape = SubResource("BoxShape3D_8ija3")
 
 [node name="DirtPatchBody" type="StaticBody3D" parent="."]
-transform = Transform3D(1.5, 0, 0, 0, 0.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DirtPatchBody"]
-transform = Transform3D(0.6666667, 0, 0, 0, 2, 0, 0, 0, 0.6666667, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42093182, 0)
 shape = SubResource("BoxShape3D_q3v31")
 debug_fill = false
 
