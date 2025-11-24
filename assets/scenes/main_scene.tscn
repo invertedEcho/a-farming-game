@@ -1,27 +1,14 @@
-[gd_scene load_steps=28 format=3 uid="uid://6ye6v48133nk"]
+[gd_scene load_steps=15 format=3 uid="uid://6ye6v48133nk"]
 
 [ext_resource type="Script" uid="uid://dwh4te3qryprb" path="res://scripts/Player/Player.cs" id="1_gagv8"]
 [ext_resource type="Script" uid="uid://dial8v0hrborf" path="res://scripts/World/World.cs" id="1_u44wh"]
 [ext_resource type="Script" uid="uid://rlnwok4wt4pf" path="res://scripts/Player/PlayerCamera.cs" id="2_u44wh"]
 [ext_resource type="Texture2D" uid="uid://whoeyc2k5fpa" path="res://assets/textures/dirty_1.png" id="4_eqalh"]
 [ext_resource type="PackedScene" uid="uid://bwrhcb2e55dd0" path="res://assets/scenes/dirtpatch.tscn" id="5_eqalh"]
-[ext_resource type="PackedScene" uid="uid://8je4avlt4ffi" path="res://assets/models/nature/glTF/CommonTree_5.gltf" id="5_wtluq"]
-[ext_resource type="PackedScene" uid="uid://cucwy1akn7aii" path="res://assets/models/nature/glTF/DeadTree_2.gltf" id="6_d6n88"]
 [ext_resource type="Script" uid="uid://ba25aw8p04s6h" path="res://scripts/UiManager.cs" id="6_vo808"]
 [ext_resource type="Texture2D" uid="uid://bnyluoesw5f0f" path="res://assets/hud/coin.png" id="7_4v045"]
-[ext_resource type="PackedScene" uid="uid://crub7te41kkme" path="res://assets/models/nature/glTF/DeadTree_5.gltf" id="7_f8r5k"]
 [ext_resource type="PackedScene" uid="uid://c23501e3bb6dg" path="res://assets/scenes/shop.tscn" id="8_0ft0v"]
-[ext_resource type="PackedScene" uid="uid://pnx00aa14e7x" path="res://assets/models/nature/glTF/Fern_1.gltf" id="8_as00q"]
-[ext_resource type="PackedScene" uid="uid://183eqjcxbgdg" path="res://assets/models/nature/glTF/Grass_Common_Short.gltf" id="9_5meus"]
-[ext_resource type="PackedScene" uid="uid://ivxlwm71e3yu" path="res://assets/models/nature/glTF/Grass_Common_Tall.gltf" id="10_6xq62"]
 [ext_resource type="Texture2D" uid="uid://bdpur6v01bt6l" path="res://assets/hud/hotbar.png" id="14_wtluq"]
-[ext_resource type="PackedScene" uid="uid://dwejps1lt6ar4" path="res://assets/models/nature/glTF/Pebble_Round_1.gltf" id="16_ajood"]
-[ext_resource type="PackedScene" uid="uid://b2pmcob273n8a" path="res://assets/models/nature/glTF/Pine_1.gltf" id="17_qeaqt"]
-[ext_resource type="PackedScene" uid="uid://dqcn4q36x1gql" path="res://assets/models/nature/glTF/Pine_2.gltf" id="18_jxdsk"]
-[ext_resource type="PackedScene" uid="uid://duyi6r04fb7cb" path="res://assets/models/nature/glTF/Pine_3.gltf" id="19_xfkhi"]
-[ext_resource type="PackedScene" uid="uid://bytga23r2f3pp" path="res://assets/models/nature/glTF/Pine_4.gltf" id="20_hf8so"]
-[ext_resource type="PackedScene" uid="uid://1mhom6ol2cuu" path="res://assets/models/nature/glTF/Pine_5.gltf" id="21_htybf"]
-[ext_resource type="PackedScene" uid="uid://dt4lyrp8yettv" path="res://assets/models/nature/glTF/Plant_1.gltf" id="22_mgqbg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0f027"]
 radius = 0.7
@@ -67,24 +54,6 @@ shape = SubResource("BoxShape3D_d5x1h")
 transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, -0.03878975, 0.036037445, -0.0064888)
 mesh = SubResource("BoxMesh_8mm7a")
 surface_material_override/0 = SubResource("StandardMaterial3D_vo808")
-
-[node name="CommonTree_52" parent="Ground" instance=ExtResource("5_wtluq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.18067, 0.742772, 14.7686825)
-
-[node name="DeadTree_22" parent="Ground" instance=ExtResource("6_d6n88")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.647625, 0.8355546, 17.22649)
-
-[node name="DeadTree_52" parent="Ground" instance=ExtResource("7_f8r5k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.61281, 0.8355546, 22.92682)
-
-[node name="Fern_12" parent="Ground" instance=ExtResource("8_as00q")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.299301, 0.5773344, 19.693312)
-
-[node name="Grass_Common_Short2" parent="Ground" instance=ExtResource("9_5meus")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.213528, 0.52238524, 16.40717)
-
-[node name="Grass_Common_Tall2" parent="Ground" instance=ExtResource("10_6xq62")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.221718, 0.53136224, 20.022118)
 
 [node name="SunLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.216941, -0.928851, -0.300286, 0.876541, 0.0499567, 0.478728, -0.429666, -0.367069, 0.825014, 0, 17.8696, 0)
@@ -157,12 +126,14 @@ layout_mode = 0
 offset_left = 1.0
 offset_right = 41.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot2" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 42.0
 offset_right = 82.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot3" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
@@ -170,66 +141,42 @@ offset_left = 83.0
 offset_top = 1.0
 offset_right = 123.0
 offset_bottom = 41.0
+expand_mode = 1
 
 [node name="InventorySlot4" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 125.0
 offset_right = 165.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot5" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 167.0
 offset_right = 207.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot6" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 207.0
 offset_right = 247.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot7" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 249.0
 offset_right = 289.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="InventorySlot8" type="TextureRect" parent="UiRoot/HotbarInventory"]
 layout_mode = 0
 offset_left = 291.0
 offset_right = 331.0
 offset_bottom = 40.0
+expand_mode = 1
 
 [node name="Shop" parent="." instance=ExtResource("8_0ft0v")]
 transform = Transform3D(3.491015, 0, 3.5794997, 0, 5.0000005, 0, -3.5794997, 0, 3.491015, 18.534254, 0.648015, -18.451683)
-
-[node name="Pebble_Round_12" parent="." instance=ExtResource("16_ajood")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.870764, 0.50779796, 19.392437)
-
-[node name="Pine_12" parent="." instance=ExtResource("17_qeaqt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.453129, 0.7350886, 16.849915)
-
-[node name="Pine_22" parent="." instance=ExtResource("18_jxdsk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7006063, 0.73508763, 23.083944)
-
-[node name="Pine_32" parent="." instance=ExtResource("19_xfkhi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77721786, 0.7350886, 23.95289)
-
-[node name="Pine_44" parent="." instance=ExtResource("20_hf8so")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.952091, 1.4701772, -22.733156)
-
-[node name="Pine_46" parent="." instance=ExtResource("20_hf8so")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.530481, 1.4701772, -9.33975)
-
-[node name="Pine_42" parent="." instance=ExtResource("20_hf8so")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.807499, 0.7350886, -15.019014)
-
-[node name="Pine_52" parent="." instance=ExtResource("21_htybf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.981472, 0.7350886, 24.437279)
-
-[node name="Plant_12" parent="." instance=ExtResource("22_mgqbg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.129538, 0.535024, 23.297514)
-
-[node name="Pine_43" parent="." instance=ExtResource("20_hf8so")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.807499, 0.7350886, -2.577526)

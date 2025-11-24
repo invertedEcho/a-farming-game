@@ -1,27 +1,23 @@
 using Godot;
 
-public partial class GrowPlot : Node3D
-{
+public partial class GrowPlot : Node3D {
     [Signal]
     public delegate void PlayerInRangeEventHandler(bool inRange);
 
     [Signal]
     public delegate void PlantFullyGrownEventHandler();
 
-    enum GrowPlotState
-    {
+    enum GrowPlotState {
         Dry,
         Watered,
         HasPlant
     }
 
-    enum PlantType
-    {
+    enum PlantType {
         Cactus,
     }
 
-    enum PlantState
-    {
+    enum PlantState {
         YoungPlant,
         AgedPlant,
         ReadyToHarvest,
@@ -31,28 +27,25 @@ public partial class GrowPlot : Node3D
     MeshInstance3D groundMesh;
     [Export]
     Area3D area3D;
-    [Export]
-    MeshInstance3D plantModel;
+
+    Node3D plantModel;
 
     PlantState plantState;
     GrowPlotState growPlotState = GrowPlotState.Dry;
 
     bool playerInRange;
 
-    public override void _Ready()
-    {
+    public override void _Ready() {
         area3D.BodyEntered += OnBodyEntered;
         area3D.BodyExited += OnBodyExit;
     }
 
-    public override void _Process(double delta)
-    {
+    public override void _Process(double delta) {
         if (!playerInRange) return;
         HandleInteractionWithGrowPlot();
     }
 
-    private void OnBodyEntered(Node3D body)
-    {
+    private void OnBodyEntered(Node3D body) {
         if (!body.IsInGroup("player")) return;
         GD.Print($"body has entered dirtpatch range! {body}");
         playerInRange = true;
@@ -60,21 +53,18 @@ public partial class GrowPlot : Node3D
         UiManager.Instance.InteractLabel.Text = GetTextForInteractLabel(growPlotState);
     }
 
-    private void OnBodyExit(Node3D body)
-    {
+    private void OnBodyExit(Node3D body) {
         if (!body.IsInGroup("player")) return;
         GD.Print("player has exited dirtpatch range!");
         playerInRange = false;
         UiManager.Instance.InteractLabel.Visible = false;
     }
 
-    private void HandleInteractionWithGrowPlot()
-    {
+    private void HandleInteractionWithGrowPlot() {
         if (!Input.IsActionJustPressed("interact")) return;
 
         // for now we always plant a cactus
-        switch (growPlotState)
-        {
+        switch (growPlotState) {
             case GrowPlotState.Dry:
                 growPlotState = GrowPlotState.Watered;
 
@@ -90,7 +80,8 @@ public partial class GrowPlot : Node3D
                 plantState = PlantState.YoungPlant;
 
                 string cactusModelPath = GetModelPathForCactusByPlantState(plantState);
-                plantModel.Mesh = GD.Load<Mesh>(cactusModelPath);
+                PackedScene plantScene = GD.Load<PackedScene>(cactusModelPath);
+                Node3D plantModel = plantScene.Instantiate<Node3D>();
 
                 string interactLabelText = "Press (F) to make this Young Plant an Aged Plant";
                 UiManager.Instance.InteractLabel.Text = interactLabelText;
@@ -100,57 +91,70 @@ public partial class GrowPlot : Node3D
 
         if (growPlotState != GrowPlotState.HasPlant) return;
 
-        switch (plantState)
-        {
-            case PlantState.YoungPlant:
-                plantState = PlantState.AgedPlant;
+        // free the model so we can add new plant model
+        if (plantModel != null) {
+            this.plantModel.Free();
+        }
 
-                string plantModelPath = GetModelPathForCactusByPlantState(plantState);
-                plantModel.Mesh = (Mesh)GD.Load(plantModelPath);
+        switch (plantState) {
+            case PlantState.YoungPlant: {
+                    plantState = PlantState.AgedPlant;
 
-                UiManager.Instance.InteractLabel.Text = "Press (F) to make this plant ready to harvest";
-                break;
-            case PlantState.AgedPlant:
-                plantState = PlantState.ReadyToHarvest;
+                    string plantModelPath = GetModelPathForCactusByPlantState(plantState);
+                    PackedScene plantScene = (PackedScene)GD.Load(plantModelPath);
+                    this.plantModel = plantScene.Instantiate<Node3D>();
+                    AddChild(this.plantModel);
 
-                plantModelPath = GetModelPathForCactusByPlantState(plantState);
-                plantModel.Mesh = (Mesh)GD.Load(plantModelPath);
-
-                UiManager.Instance.InteractLabel.Text = "Press (F) to harvest this plant";
-                break;
-            case PlantState.ReadyToHarvest:
-                growPlotState = GrowPlotState.Dry;
-                plantState = PlantState.YoungPlant;
-                plantModel.Mesh = null;
-                GameItem gameItem = new GameItem { BuyPrice = GameConstants.CactusBuyPrize, DescriptionName = "Cactus", PathToTexture = "res://assets/", SellPrice = GameConstants.CactusSellPrize, IsPlaceHolder = false };
-                bool result = Player.Instance.AppendItemToInventory(gameItem);
-                if (!result)
-                {
-                    GD.Print("couldnt add item to inventory, inventory already full. what to do now?");
+                    UiManager.Instance.InteractLabel.Text = "Press (F) to make this plant ready to harvest";
+                    break;
                 }
-                break;
+            case PlantState.AgedPlant: {
+                    plantState = PlantState.ReadyToHarvest;
+
+                    string plantModelPath = GetModelPathForCactusByPlantState(plantState);
+                    PackedScene plantScene = (PackedScene)GD.Load(plantModelPath);
+                    this.plantModel = plantScene.Instantiate<Node3D>();
+                    AddChild(plantModel);
+
+                    UiManager.Instance.InteractLabel.Text = "Press (F) to harvest this plant";
+                    break;
+                }
+            case PlantState.ReadyToHarvest: {
+                    growPlotState = GrowPlotState.Dry;
+                    plantState = PlantState.YoungPlant;
+
+                    GameItem gameItem = new GameItem {
+                        BuyPrice = GameConstants.CactusBuyPrize,
+                        DescriptionName = "Cactus",
+                        PathToTexture = "res://assets/models/nature/cactus/grown_cactus.png",
+                        SellPrice = GameConstants.CactusSellPrize,
+                        IsPlaceHolder = false
+                    };
+
+                    bool result = Player.Instance.AppendItemToInventory(gameItem);
+                    if (!result) {
+                        GD.Print("couldnt add item to inventory, inventory already full. what to do now?");
+                    }
+                    break;
+                }
         }
     }
 
-    private static string GetModelPathForCactusByPlantState(PlantState plantState)
-    {
-        switch (plantState)
-        {
+    private static string GetModelPathForCactusByPlantState(PlantState plantState) {
+        switch (plantState) {
             case PlantState.YoungPlant:
-                return "res://assets/models/nature/cactus/Cactus_3.obj";
+                return "res://assets/models/nature/cactus/Cactus_3.glb";
             case PlantState.AgedPlant:
-                return "res://assets/models/nature/cactus/Cactus_2.obj";
+                return "res://assets/models/nature/cactus/Cactus_2.glb";
             case PlantState.ReadyToHarvest:
-                return "res://assets/models/nature/cactus/CactusFlowers_2.fbx";
+                return "res://assets/models/nature/cactus/CactusFlowers_2.glb";
             default: return "";
         }
     }
 
-    private static string GetTextForInteractLabel(GrowPlotState growPlotState)
-    {
+    private static string GetTextForInteractLabel(GrowPlotState growPlotState) {
         // for now we always plant a cactus
-        switch (growPlotState)
-        {
+        switch (growPlotState) {
             case GrowPlotState.Dry: return "Press (F) to water this grow plot";
             case GrowPlotState.Watered: return "Press (F) to plant a young cactus";
             case GrowPlotState.HasPlant: return "Press (F) to harvest the plant";
