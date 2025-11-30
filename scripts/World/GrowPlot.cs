@@ -47,7 +47,6 @@ public partial class GrowPlot : Node3D {
 
     private void OnBodyEntered(Node3D body) {
         if (!body.IsInGroup("player")) return;
-        GD.Print($"body has entered dirtpatch range! {body}");
         playerInRange = true;
         UiManager.Instance.InteractLabel.Visible = true;
         UiManager.Instance.InteractLabel.Text = GetTextForInteractLabel(growPlotState);

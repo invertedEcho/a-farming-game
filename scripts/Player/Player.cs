@@ -118,6 +118,9 @@ public partial class Player : CharacterBody3D {
 
         Inventory[index] = new GameItem { IsPlaceHolder = true };
         return true;
+    }
+
+    private void ToggleFreeCam() {
 
     }
 }
