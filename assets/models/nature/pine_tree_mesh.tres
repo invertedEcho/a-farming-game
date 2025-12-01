@@ -6,6 +6,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0kqlj"]
 resource_name = "Bark_NormalTree"
+cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("1_scxo7")
 metallic = 0.4
@@ -21,6 +22,7 @@ metadata/extras = {
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g15qu"]
 resource_name = "Leaves_Pine"
 transparency = 4
+cull_mode = 2
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("3_xv0q6")
 metallic = 0.4
