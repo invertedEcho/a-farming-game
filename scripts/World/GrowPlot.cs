@@ -1,5 +1,7 @@
 using Godot;
 
+namespace agame.scripts.World;
+
 public partial class GrowPlot : Node3D {
     [Signal]
     public delegate void PlayerInRangeEventHandler(bool inRange);
@@ -13,7 +15,7 @@ public partial class GrowPlot : Node3D {
         HasPlant
     }
 
-    enum PlantType {
+    public enum PlantType {
         Cactus,
     }
 
@@ -24,7 +26,7 @@ public partial class GrowPlot : Node3D {
     }
 
     [Export]
-    MeshInstance3D groundMesh;
+    MeshInstance3D _groundMesh;
     [Export]
     Area3D area3D;
 
@@ -38,6 +40,7 @@ public partial class GrowPlot : Node3D {
     public override void _Ready() {
         area3D.BodyEntered += OnBodyEntered;
         area3D.BodyExited += OnBodyExit;
+        _groundMesh = GetNode<MeshInstance3D>("Ground");
     }
 
     public override void _Process(double delta) {
@@ -67,9 +70,10 @@ public partial class GrowPlot : Node3D {
             case GrowPlotState.Dry:
                 growPlotState = GrowPlotState.Watered;
 
-                StandardMaterial3D newMaterial = new StandardMaterial3D();
-                newMaterial.AlbedoTexture = (Texture2D)GD.Load("res://assets/textures/wet_dirt.png");
-                groundMesh.SetSurfaceOverrideMaterial(0, newMaterial);
+                StandardMaterial3D newMaterial = new() {
+                    AlbedoTexture = (Texture2D)GD.Load("res://assets/textures/wet_dirt.png")
+                };
+                _groundMesh.SetSurfaceOverrideMaterial(0, newMaterial);
 
                 UiManager.Instance.InteractLabel.Text = "Press (F) to plant a Young Cactus";
 
@@ -117,7 +121,8 @@ public partial class GrowPlot : Node3D {
                     growPlotState = GrowPlotState.Dry;
                     plantState = PlantState.YoungPlant;
 
-                    GameItem gameItem = new GameItem {
+                    PlantItem plantItem = new PlantItem {
+                        gameItemType = GameItem.GameItemType.Plant,
                         BuyPrice = GameConstants.CactusBuyPrize,
                         DescriptionName = "Cactus",
                         PathToTexture = "res://assets/models/nature/cactus/grown_cactus.png",
@@ -125,11 +130,12 @@ public partial class GrowPlot : Node3D {
                         IsPlaceHolder = false
                     };
 
-                    bool result = Player.Instance.AppendItemToInventory(gameItem);
-                    GameManager.Instance.UpdateObjective(GameManager.GameObjective.SellFirstPlant);
+                    bool result = Player.Player.Instance.AppendItemToInventory(plantItem);
                     if (!result) {
                         GD.Print("couldnt add item to inventory, inventory already full. what to do now?");
+                        break;
                     }
+                    GameManager.Instance.UpdateObjective(GameManager.GameObjective.SellFirstPlant);
                     break;
                 }
         }

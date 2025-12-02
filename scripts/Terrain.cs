@@ -60,9 +60,9 @@ public partial class Terrain : Node3D {
 
             Vector3 randomEdgePoint = new Vector3((float)randomX, 5f, (float)randomZ);
             Vector3? snappedEdgePoint = SnapToTerrain(randomEdgePoint);
-            if (snappedEdgePoint != null) {
+            if (snappedEdgePoint is Vector3 edgePoint) {
                 Transform3D transform = Transform3D.Identity;
-                transform.Origin = (Vector3)snappedEdgePoint;
+                transform.Origin = edgePoint;
                 treeMeshes.Multimesh.SetInstanceTransform(currentMeshInstanceIndex, transform);
             }
             currentMeshInstanceIndex++;
@@ -76,9 +76,9 @@ public partial class Terrain : Node3D {
 
             Vector3 randomEdgePoint = new Vector3((float)randomX, 5f, (float)randomZ);
             Vector3? snappedEdgePoint = SnapToTerrain(randomEdgePoint);
-            if (snappedEdgePoint != null) {
+            if (snappedEdgePoint is Vector3 edgePoint) {
                 Transform3D transform = Transform3D.Identity;
-                transform.Origin = (Vector3)snappedEdgePoint;
+                transform.Origin = edgePoint;
                 treeMeshes.Multimesh.SetInstanceTransform(currentMeshInstanceIndex, transform);
             }
             currentMeshInstanceIndex++;
@@ -90,9 +90,9 @@ public partial class Terrain : Node3D {
 
             Vector3 randomEdgePoint = new Vector3((float)randomX, 5f, (float)randomZ);
             Vector3? snappedEdgePoint = SnapToTerrain(randomEdgePoint);
-            if (snappedEdgePoint != null) {
+            if (snappedEdgePoint is Vector3 edgePoint) {
                 Transform3D transform = Transform3D.Identity;
-                transform.Origin = (Vector3)snappedEdgePoint;
+                transform.Origin = edgePoint;
                 treeMeshes.Multimesh.SetInstanceTransform(currentMeshInstanceIndex, transform);
             }
             currentMeshInstanceIndex++;
@@ -104,9 +104,9 @@ public partial class Terrain : Node3D {
 
             Vector3 randomEdgePoint = new Vector3((float)randomX, 5f, (float)randomZ);
             Vector3? snappedEdgePoint = SnapToTerrain(randomEdgePoint);
-            if (snappedEdgePoint != null) {
+            if (snappedEdgePoint is Vector3 edgePoint) {
                 Transform3D transform = Transform3D.Identity;
-                transform.Origin = (Vector3)snappedEdgePoint;
+                transform.Origin = edgePoint;
                 treeMeshes.Multimesh.SetInstanceTransform(currentMeshInstanceIndex, transform);
             }
             currentMeshInstanceIndex++;

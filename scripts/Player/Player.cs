@@ -1,8 +1,11 @@
 using Godot;
 using Godot.Collections;
+using static GameItem;
+
+namespace agame.scripts.Player;
 
 public partial class Player : CharacterBody3D {
-    PlayerCamera playerCamera;
+    private PlayerCamera _playerCamera;
     private int _speed = 15;
     private float _jumpVelocity = 10.0f;
 
@@ -10,27 +13,22 @@ public partial class Player : CharacterBody3D {
 
     public int CoinCount { get; set; } = 0;
 
-    const int InventorySize = 8;
 
-    // maybe have a better data structure, for now we want fixed size of InventorySize. for now we just ensure this at developer side that it wont be bigger than this
-    private Array<GameItem> Inventory = new Array<GameItem>();
+    public const int InventorySize = 8;
+    // maybe have a better data structure, we want fixed size of InventorySize. for now we just ensure this at developer side that it wont be bigger than this
+    private Array<GameItem> _inventory = [];
 
     public override void _Ready() {
         Instance = this;
-        playerCamera = (PlayerCamera)GetNode("PlayerCamera");
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
-        Inventory.Add(new GameItem { IsPlaceHolder = true });
+        _playerCamera = (PlayerCamera)GetNode("PlayerCamera");
+        for (int i = 0; i < InventorySize; i++) {
+            _inventory.Add(new GameItem { IsPlaceHolder = true });
+        }
     }
 
-    public void HandleMovementInput() {
-        if (playerCamera.freeCamEnabled) return;
-        Vector3 localVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+    private void HandleMovementInput() {
+        if (_playerCamera.freeCamEnabled) return;
+        Vector3 localVelocity = new();
 
         if (Input.IsActionPressed("move_left")) {
             localVelocity.X -= 1.0f;
@@ -47,7 +45,7 @@ public partial class Player : CharacterBody3D {
 
         localVelocity = localVelocity.Normalized();
 
-        Godot.Basis basis = playerCamera.GlobalBasis;
+        Basis basis = _playerCamera.GlobalBasis;
         Vector3 movement = basis.X * localVelocity.X + basis.Z * localVelocity.Z;
 
         Velocity = new Vector3(movement.X * _speed, Velocity.Y, movement.Z * _speed);
@@ -78,34 +76,34 @@ public partial class Player : CharacterBody3D {
     }
 
     // if there is already an item at the given index
-    /// Returns a boolean indicating whether adding the item was succesful
-    public bool AddItemToInventory(GameItem itemToAdd, int index) {
+    /// Returns a boolean indicating whether adding the item was successful
+    private bool AddItemToInventory(GameItem itemToAdd, int index) {
         if (index + 1 > InventorySize) {
             GD.PrintErr($"The inventory has a size of {InventorySize} so the given index {index} is invalid");
             return false;
         }
 
-        GameItem currentItem = Inventory[index];
+        GameItem currentItem = _inventory[index];
 
         if (!currentItem.IsPlaceHolder) {
             GD.PrintErr($"The inventory already contains a GameItem at index {index}: {currentItem}");
             return false;
         }
 
-        Inventory[0] = itemToAdd;
+        _inventory[0] = itemToAdd;
         return true;
     }
 
-    /// Tries to find an empty slot in the inventory and add. If unsucessful, this method will return false, otherwise true.
+    /// Tries to find an empty slot in the inventory and add the given item. If unsuccessful, this method will return false, otherwise true.
     public bool AppendItemToInventory(GameItem itemToAdd) {
-        for (int index = 0; index < Inventory.Count; index++) {
-            GameItem currentGameItem = Inventory[index];
+        for (int index = 0; index < _inventory.Count; index++) {
+            GameItem currentGameItem = _inventory[index];
 
-            if (currentGameItem.IsPlaceHolder) {
-                currentGameItem = itemToAdd;
-                UiManager.Instance.InventorySlot1.Texture = GD.Load<Texture2D>(itemToAdd.PathToTexture);
-                return true;
-            }
+            if (!currentGameItem.IsPlaceHolder) continue;
+
+            _inventory[index] = itemToAdd;
+            UiManager.Instance.InventorySlotTextures[index].Texture = GD.Load<Texture2D>(itemToAdd.PathToTexture);
+            return true;
         }
         return false;
     }
@@ -117,7 +115,25 @@ public partial class Player : CharacterBody3D {
             return false;
         }
 
-        Inventory[index] = new GameItem { IsPlaceHolder = true };
+        _inventory[index] = new GameItem { IsPlaceHolder = true };
+        GD.Print($"setting texture of inventory slot {index} to null");
+        UiManager.Instance.InventorySlotTextures[index].Texture = null;
         return true;
+    }
+
+    /// Returns the game item and index for the given GameItemType
+    public (GameItem, int)? GetInventoryItemByType(GameItemType gameItemType) {
+        for (int i = 0; i < InventorySize; i++) {
+            GameItem currentItem = _inventory[i];
+            if (currentItem.gameItemType == gameItemType) {
+                switch (gameItemType) {
+                    case GameItemType.Plant: {
+                            break;
+                        }
+                }
+                return (currentItem, i);
+            }
+        }
+        return null;
     }
 }

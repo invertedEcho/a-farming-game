@@ -53,7 +53,7 @@ skeleton = NodePath("")
 [node name="SunLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.21694095, -0.92885137, -0.30028638, 0.12379606, -0.27895105, 0.9522925, -0.9683032, -0.24376553, 0.054472238, 0, 21.900164, 0)
 
-[node name="UiRoot" type="Control" parent="." node_paths=PackedStringArray("CurrentObjectiveLabel", "InteractLabel", "CoinsLabel", "InventorySlot1", "InventorySlot2", "InventorySlot3", "InventorySlot4", "InventorySlot5", "InventorySlot6", "InventorySlot7", "InventorySlot8")]
+[node name="UiRoot" type="Control" parent="." node_paths=PackedStringArray("CurrentObjectiveLabel", "InteractLabel", "CoinsLabel", "InventorySlotTextures")]
 layout_mode = 3
 anchors_preset = 0
 offset_top = -3.0
@@ -63,14 +63,7 @@ script = ExtResource("6_vo808")
 CurrentObjectiveLabel = NodePath("MarginContainer/VBoxContainer/CurrentObjectiveLabel")
 InteractLabel = NodePath("InteractLabel")
 CoinsLabel = NodePath("MarginContainer/VBoxContainer/HBoxContainer/CoinsLabel")
-InventorySlot1 = NodePath("HotbarInventory/InventorySlot1")
-InventorySlot2 = NodePath("HotbarInventory/InventorySlot2")
-InventorySlot3 = NodePath("HotbarInventory/InventorySlot3")
-InventorySlot4 = NodePath("HotbarInventory/InventorySlot4")
-InventorySlot5 = NodePath("HotbarInventory/InventorySlot5")
-InventorySlot6 = NodePath("HotbarInventory/InventorySlot6")
-InventorySlot7 = NodePath("HotbarInventory/InventorySlot7")
-InventorySlot8 = NodePath("HotbarInventory/InventorySlot8")
+InventorySlotTextures = []
 
 [node name="MarginContainer" type="MarginContainer" parent="UiRoot"]
 layout_mode = 0

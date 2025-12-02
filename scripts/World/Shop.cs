@@ -1,40 +1,45 @@
+using System;
 using Godot;
 
+namespace agame.scripts.World;
+
 public partial class Shop : Node3D {
-    bool playerInRange;
+    private bool _playerInRange;
 
     [Export]
-    Area3D area3D;
+    private Area3D _area3D;
 
-    Player player;
+    private Player.Player _player;
 
     public override void _Ready() {
         // hmm i dont know how i feel about this, maybe better way to access player inventory?
-        player = GetNode<Player>("/root/World/Player");
+        _player = GetNode<Player.Player>("/root/World/Player");
+        _area3D = GetNode<Area3D>("Area3D");
 
         // TODO: only connect this once we have reached GameObjective.SellFirstPlant
-        area3D.BodyEntered += OnBodyEntered;
-        area3D.BodyExited += OnBodyExit;
+        _area3D.BodyEntered += OnBodyEntered;
+        _area3D.BodyExited += OnBodyExit;
     }
 
     private void OnBodyEntered(Node3D body) {
+        if (!body.IsInGroup("player")) return;
+
+        GD.Print("player has entered shop range!");
         if (GameManager.Instance.CurrentObjective == GameManager.GameObjective.GrowFirstPlant) {
+            GD.Print("current objective is growfirstplant, ignoring player entered shop range");
             return;
         }
 
-        if (!body.IsInGroup("player")) return;
-
         UiManager.Instance.InteractLabel.Text = $"Press (F) to sell your Cactus for {GameConstants.CactusSellPrize} coins!";
-        GD.Print("player has entered shop range!");
-        playerInRange = true;
+        _playerInRange = true;
         UiManager.Instance.InteractLabel.Visible = true;
     }
 
-    private void OnBodyExit(Node3D body) {
+    public void OnBodyExit(Node3D body) {
         if (!body.IsInGroup("player")) return;
 
         GD.Print("player has exited shop range!");
-        playerInRange = false;
+        _playerInRange = false;
         UiManager.Instance.InteractLabel.Visible = false;
     }
 
@@ -43,22 +48,29 @@ public partial class Shop : Node3D {
     }
 
     private void HandleInteractionWithShop() {
-        bool interactActionJustPressed = Input.IsActionJustPressed("interact");
+        var interactActionJustPressed = Input.IsActionJustPressed("interact");
 
-        if (!(playerInRange && interactActionJustPressed)) return;
+        if (!(_playerInRange && interactActionJustPressed)) return;
 
         switch (GameManager.Instance.CurrentObjective) {
+            case GameManager.GameObjective.GrowFirstPlant:
+                break;
             case GameManager.GameObjective.SellFirstPlant:
-                // TODO: use prize depending on plant type being sold
-                Player.Instance.AddCoin(GameConstants.CactusSellPrize);
-                GameManager.Instance.UpdateObjective(GameManager.GameObjective.BuyFirstPlot);
-                GD.Print("Player has sold cactus");
+                var inventoryItem = _player.GetInventoryItemByType(GameItem.GameItemType.Plant);
+                if (inventoryItem is (PlantItem plantItem, var index)) {
+                    _player.RemoveItemFromInventory(index);
+                    Player.Player.Instance.AddCoin(plantItem.SellPrice);
+                    GameManager.Instance.UpdateObjective(GameManager.GameObjective.BuyFirstPlot);
+                    GD.Print("Player has sold plant");
+                }
                 break;
             case GameManager.GameObjective.BuyFirstPlot:
-                if (Player.Instance.CoinCount < GameConstants.PlotPrize) {
+                if (Player.Player.Instance.CoinCount < GameConstants.PlotPrize) {
                     GD.Print("player doesnt have enough money to buy their first plot!");
                 }
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
